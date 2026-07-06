@@ -1,0 +1,396 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background-image: url(images/bluecheckbg.jpg);
+    background-size: cover;
+    background-attachment: fixed;
+    font-family: "Emilys Candy", serif;
+    cursor: url("images/heartcursor.png") 16 16, auto;
+}
+
+/* ── Header ── */
+header {
+   
+    position: relative;
+    text-align: center;
+    margin: 20px auto 0;
+    height: 100px;
+    width: min(900px, 95vw);
+    background-image: url('images/washi-tape.png');
+    background-size: cover;
+    background-position: center;
+    border-radius: 20px;
+    border: 2px solid hsla(120, 92%, 90%, 0.3);
+    filter: drop-shadow(5px 8px 6px rgba(0,0,0,0.25));
+    animation: float 3s ease-in-out infinite;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+header h1 {
+    color: #f7f7f7;
+    font-size: 50px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+    margin: 0;
+}
+
+.sticker {
+    position: absolute;
+    filter: drop-shadow(5px 8px 6px rgba(0,0,0,0.25));
+}
+
+#stickerbunny {
+    width: 180px;
+    top: -10px;
+    left: -60px;
+}
+
+#stickerbow {
+    width: 160px;
+    top: -40px;
+    right: -50px;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-12px); }
+}
+
+/* ── Screen system ── */
+.screen {
+    display: none;
+}
+
+.screen.active {
+    display: block;
+}
+
+/* ── Choice screen (screen-choice, screen-draw) ── */
+#screen-choice,
+#screen-draw {
+    min-height: 70vh;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#screen-choice.active,
+#screen-draw.active {
+    display: flex;
+}
+
+.choice-title {
+    color: #8b4d63;
+    font-size: 26px;
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.choice-buttons {
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.choice-btn {
+    font-family: "Emilys Candy", serif;
+    font-size: 15px;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    border: 2px solid #eaeaea;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 20px;
+}
+
+.choice-btn:hover {
+    border-color: #ffb6c1;
+    background: #fff0f5;
+    transform: translateY(-4px);
+}
+
+.choice-screen-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    gap: 20px;
+}
+
+/* ── Builder screen ── */
+.builder-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 30px;
+    padding: 30px 20px;
+    width: 100%;
+}
+
+.options-column {
+    width: 460px;
+    flex-shrink: 0;
+}
+
+.preview-column {
+    width: 420px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 20px;
+}
+
+/* Step panels inside builder */
+.step-panel {
+    display: none;
+}
+
+.step-panel.active {
+    display: block;
+}
+
+.selection {
+    background-image: url("https://thumbs.dreamstime.com/b/vintage-romantic-writing-paper-letters-background-old-lines-red-color-yellow-rose-127954291.jpg");
+    background-size: cover;
+    border-radius: 16px;
+    padding: 20px;
+    min-height: 420px;
+    box-shadow: 2px 4px 16px rgba(0,0,0,0.1);
+    overflow-y: auto;
+}
+
+.selection h2 {
+    color: #8b4d63;
+    text-align: center;
+    margin-top: 0;
+}
+
+.options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    justify-items: center;
+    margin-bottom: 16px;
+}
+
+.option {
+    font-family: "Emilys Candy", serif;
+    font-size: 13px;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    border: 2px solid #eaeaea;
+    background: rgba(255,255,255,0.85);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 10px;
+}
+
+.option img {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    display: block;
+}
+
+.option:hover {
+    border-color: #ffb6c1;
+    background: #fff0f5;
+}
+
+/* Buttons */
+.next-button {
+    font-family: "Emilys Candy", serif;
+    padding: 10px 22px;
+    background-color: #ffb6c1;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 12px;
+    margin-right: 8px;
+}
+
+.next-button:hover {
+    background-color: #ff69b4;
+}
+
+.back-btn {
+    background-color: #e8e8e8;
+    color: #888;
+}
+
+.back-btn:hover {
+    background-color: #d0d0d0;
+}
+
+/* Workspace */
+.workspace {
+    position: relative;
+    width: 400px;
+    height: 480px;
+    background: rgba(255,255,255,0.85);
+    border: 2px dashed #ccc;
+    border-radius: 16px;
+    overflow: hidden;
+    margin: 0 auto;
+}
+
+.workspace-tools {
+    position: absolute;
+    bottom: 12px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    z-index: 100;
+}
+
+.workspace-tools button {
+    font-family: "Emilys Candy", serif;
+    padding: 8px 14px;
+    background: #ffb6c1;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.workspace-tools button:hover {
+    background: #ff69b4;
+}
+
+.placed-item {
+    position: absolute;
+    width: 110px;
+    cursor: grab;
+    user-select: none;
+    touch-action: none;
+}
+
+.placed-item.selected {
+    outline: 2px dashed #ff69b4;
+}
+
+#notePreviewBox {
+    margin: 16px auto 0;
+    width: 400px;
+    min-height: 60px;
+    padding: 14px;
+    background: #fff7f7;
+    border: 2px solid #ffd7e1;
+    border-radius: 12px;
+    color: #8b4d63;
+    text-align: center;
+    font-family: "Emilys Candy", serif;
+}
+
+#note {
+    width: 100%;
+    min-height: 160px;
+    padding: 14px;
+    font-family: "Emilys Candy", serif;
+    border: 2px solid #ffb6c1;
+    border-radius: 10px;
+    resize: vertical;
+    display: block;
+    margin-bottom: 10px;
+}
+
+/* ── Final screen ── */
+.final-inner {
+    max-width: 500px;
+    margin: 40px auto;
+    padding: 30px;
+    background: #fff7f7;
+    border: 2px solid #ffd7e1;
+    border-radius: 24px;
+    text-align: center;
+    color: #8b4d63;
+}
+
+.final-inner h2 {
+    margin-top: 0;
+}
+
+#finalBouquetImage,
+#finalNoteImage {
+    width: 100%;
+    max-width: 420px;
+    border-radius: 12px;
+    border: 2px dashed #ffd7e1;
+    display: block;
+    margin: 10px auto;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+#finalBouquetImage:hover,
+#finalNoteImage:hover {
+    opacity: 0.85;
+}
+
+.download-hint {
+    font-size: 13px;
+    color: #c48fa0;
+    margin: 4px 0 16px;
+}
+
+.share-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 16px;
+}
+
+#shareLink {
+    flex: 1;
+    min-width: 200px;
+    padding: 10px;
+    font-family: Arial, sans-serif;
+    border: 2px solid #ffb6c1;
+    border-radius: 8px;
+}
+
+#copyStatus {
+    min-height: 20px;
+    color: #ff69b4;
+    margin: 8px 0 0;
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+    .builder-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    .options-column,
+    .preview-column {
+        width: 100%;
+        max-width: 460px;
+        position: static;
+    }
+    .workspace,
+    #notePreviewBox {
+        width: 100%;
+    }
+}

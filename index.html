@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flora: My Bouquet!</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Emilys+Candy&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <h1>Make your own bouquet!</h1>
+        <img class="sticker" id="stickerbunny" src="images/bunny holding a bouquet.png">
+        <img class="sticker" id="stickerbow" src="images/pinkbow.jpg">
+    </header>
+
+    <!-- SCREEN 0: choice -->
+    <div id="screen-choice" class="screen active">
+        <h2 class="choice-title">What would you like to do?</h2>
+        <div class="choice-buttons">
+            <button class="choice-btn" id="goToBuilder">Choose from pre-made flowers</button>
+            <button class="choice-btn" id="goToDraw">Draw your own flowers</button>
+        </div>
+    </div>
+
+    <!-- SCREEN 1: builder -->
+    <div id="screen-builder" class="screen">
+        <div class="builder-container">
+
+            <!-- LEFT: steps -->
+            <div class="options-column">
+
+                <div id="step1" class="step-panel active selection">
+                    <h2>Select fresh blooms!</h2>
+                    <div class="options-grid">
+                        <button class="option" data-flower="images/orchids.jpg"><img src="images/orchids.jpg" alt="Orchid">Orchids</button>
+                        <button class="option" data-flower="images/rose.jpg"><img src="images/rose.jpg" alt="Rose">Red Rose</button>
+                        <button class="option" data-flower="images/tulip.webp"><img src="images/tulip.webp" alt="Tulip">Tulip</button>
+                        <button class="option" data-flower="images/daisyy.png"><img src="images/daisyy.png" alt="Daisy">Daisy</button>
+                        <button class="option" data-flower="images/pink-lily.png"><img src="images/pink-lily.png" alt="Pink Lily">Pink Lily</button>
+                        <button class="option" data-flower="images/sunflower.png"><img src="images/sunflower.png" alt="Sunflower">Sunflower</button>
+                    </div>
+                    <button class="next-button" data-next="step2">Next →</button>
+                </div>
+
+                <div id="step2" class="step-panel selection">
+                    <h2>Pick a bow!</h2>
+                    <div class="options-grid">
+                        <button class="option" data-bow="images/red-bow.jpg"><img src="images/red-bow.jpg" alt="Red Bow">Red Bow</button>
+                        <button class="option" data-bow="images/blue-bow.png"><img src="images/blue-bow.png" alt="Blue Bow">Blue Bow</button>
+                        <button class="option" data-bow="images/green-bow.png"><img src="images/green-bow.png" alt="Green Bow">Green Bow</button>
+                        <button class="option" data-bow="images/purple-bow.png"><img src="images/purple-bow.png" alt="Purple Bow">Purple Bow</button>
+                        <button class="option" data-bow="images/yellow-bow.png"><img src="images/yellow-bow.png" alt="Yellow Bow">Yellow Bow</button>
+                        <button class="option" data-bow="images/pink-bow.png"><img src="images/pink-bow.png" alt="Pink Bow">Pink Bow</button>
+                    </div>
+                    <button class="next-button back-btn" data-back="step1">← Go Back</button>
+                    <button class="next-button" data-next="step3">Next →</button>
+                </div>
+
+                <div id="step3" class="step-panel selection">
+                    <h2>Write a note!</h2>
+                    <textarea id="note" placeholder="Your message..."></textarea>
+                    <button class="next-button back-btn" data-back="step2">← Go Back</button>
+                    <button id="finishButton" class="next-button">Create Bouquet</button>
+                </div>
+
+            </div>
+
+            <!-- RIGHT: workspace -->
+            <div class="preview-column">
+                <div class="workspace" id="workspace">
+                    <div class="workspace-tools">
+                        <button id="mirrorBtn">↔ Mirror</button>
+                        <button id="rotateBtn">↻ Rotate</button>
+                        <button id="deleteBtn">✕ Delete</button>
+                    </div>
+                </div>
+                <div id="notePreviewBox">
+                    <p id="notePreview">Your note will appear here.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- SCREEN 2: draw placeholder -->
+    <div id="screen-draw" class="screen">
+        <div class="choice-screen-inner">
+            <h2 class="choice-title"> Drawing mode coming soon!</h2>
+            <button class="next-button back-btn" id="backFromDraw">← Go Back</button>
+        </div>
+    </div>
+
+    <!-- SCREEN 3: final result -->
+    <div id="screen-final" class="screen">
+        <div class="final-inner">
+            <h2>Your bouquet is ready! </h2>
+            <a id="bouquetDownload" download="my-bouquet.png">
+                <img id="finalBouquetImage" alt="Click to download your bouquet">
+            </a>
+            <p class="download-hint">Click the bouquet image to download it!</p>
+
+            <a id="noteDownload" download="my-note.png">
+                <img id="finalNoteImage" alt="Click to download your note">
+            </a>
+            <p class="download-hint">Click the note image to download it!</p>
+
+            <div class="share-row">
+                <input id="shareLink" type="text" readonly placeholder="Share link will appear here">
+                <button id="copyLinkBtn" class="next-button">Copy Link</button>
+            </div>
+            <p id="copyStatus"></p>
+            <button id="startOverBtn" class="next-button back-btn">Start Over</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
