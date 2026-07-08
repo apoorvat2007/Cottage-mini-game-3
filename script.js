@@ -1,41 +1,33 @@
-// ── Element refs ──
-const workspace       = document.querySelector("#workspace");
-const note            = document.querySelector("#note");
-const notePreview     = document.querySelector("#notePreview");
-const finishButton    = document.querySelector("#finishButton");
-const mirrorBtn       = document.querySelector("#mirrorBtn");
-const rotateBtn       = document.querySelector("#rotateBtn");
-const deleteBtn       = document.querySelector("#deleteBtn");
-const shareLink       = document.querySelector("#shareLink");
-const copyLinkBtn     = document.querySelector("#copyLinkBtn");
-const copyStatus      = document.querySelector("#copyStatus");
+
+const workspace         = document.querySelector("#workspace");
+const finishButton      = document.querySelector("#finishButton");
+const mirrorBtn         = document.querySelector("#mirrorBtn");
+const rotateBtn         = document.querySelector("#rotateBtn");
+const deleteBtn         = document.querySelector("#deleteBtn");
+const shareLink         = document.querySelector("#shareLink");
+const copyLinkBtn       = document.querySelector("#copyLinkBtn");
+const copyStatus        = document.querySelector("#copyStatus");
 const finalBouquetImage = document.querySelector("#finalBouquetImage");
-const finalNoteImage  = document.querySelector("#finalNoteImage");
-const bouquetDownload = document.querySelector("#bouquetDownload");
-const noteDownload    = document.querySelector("#noteDownload");
-const startOverBtn    = document.querySelector("#startOverBtn");
+const bouquetDownload   = document.querySelector("#bouquetDownload");
+const startOverBtn      = document.querySelector("#startOverBtn");
+const myDrawnFlowers    = document.querySelector("#myDrawnFlowers");
 
 let selectedItem = null;
 let draggedItem  = null;
 let offsetX = 0, offsetY = 0;
 let topLayer = 1;
-
-// ── Sound ──
 const buttonSound = new Audio('mixkit-pen-click-and-release-1115.wav');
 function playSound() {
     buttonSound.currentTime = 0;
     buttonSound.play().catch(() => {});
 }
 
-// ════════════════════════════════
-//  SCREEN SWITCHING
-// ════════════════════════════════
+
 function showScreen(id) {
     document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
     document.getElementById(id).classList.add("active");
 }
 
-// ── Choice screen buttons ──
 document.getElementById("goToBuilder").addEventListener("click", () => {
     showScreen("screen-builder");
     showStep("step1");
@@ -52,25 +44,19 @@ document.getElementById("backFromDraw").addEventListener("click", () => {
 });
 
 document.getElementById("startOverBtn").addEventListener("click", () => {
-    showScreen("screen-choice");
-    // reset workspace
     workspace.querySelectorAll(".placed-item").forEach(i => i.remove());
     document.querySelector(".workspace-tools").style.display = "flex";
-    if (note) note.value = "";
-    if (notePreview) notePreview.textContent = "Your note will appear here.";
     showStep("step1");
+    showScreen("screen-choice");
 });
 
-// ════════════════════════════════
-//  STEP SWITCHING (inside builder)
-// ════════════════════════════════
+
 function showStep(stepId) {
     document.querySelectorAll(".step-panel").forEach(p => p.classList.remove("active"));
     const target = document.getElementById(stepId);
     if (target) target.classList.add("active");
 }
 
-// next buttons
 document.querySelectorAll("[data-next]").forEach(btn => {
     btn.addEventListener("click", () => {
         showStep(btn.dataset.next);
@@ -78,16 +64,13 @@ document.querySelectorAll("[data-next]").forEach(btn => {
     });
 });
 
-// back buttons
 document.querySelectorAll("[data-back]").forEach(btn => {
     btn.addEventListener("click", () => {
         showStep(btn.dataset.back);
     });
 });
 
-// ════════════════════════════════
-//  FLOWER / BOW OPTIONS
-// ════════════════════════════════
+
 document.querySelectorAll("[data-flower], [data-bow]").forEach(btn => {
     btn.addEventListener("click", () => {
         const src  = btn.dataset.flower || btn.dataset.bow;
@@ -97,9 +80,7 @@ document.querySelectorAll("[data-flower], [data-bow]").forEach(btn => {
     });
 });
 
-// ════════════════════════════════
-//  WORKSPACE TOOLS
-// ════════════════════════════════
+
 if (mirrorBtn) mirrorBtn.addEventListener("click", () => {
     if (!selectedItem) return;
     selectedItem.dataset.mirrored = String(selectedItem.dataset.mirrored !== "true");
@@ -118,7 +99,7 @@ if (deleteBtn) deleteBtn.addEventListener("click", () => {
     selectedItem = null;
 });
 
-// Deselect on empty click
+
 document.addEventListener("click", e => {
     if (!e.target.closest(".placed-item")) {
         document.querySelectorAll(".placed-item").forEach(i => i.classList.remove("selected"));
@@ -126,29 +107,24 @@ document.addEventListener("click", e => {
     }
 });
 
-// ── Note preview ──
-if (note) note.addEventListener("input", () => {
-    if (notePreview) notePreview.textContent = note.value.trim() || "Your note will appear here.";
-});
 
-// ── Finish button ──
 if (finishButton) finishButton.addEventListener("click", createFinalBouquet);
 
-// ── Copy link ──
+
 if (copyLinkBtn) copyLinkBtn.addEventListener("click", () => {
     if (!shareLink) return;
     shareLink.select();
     navigator.clipboard.writeText(shareLink.value)
-        .then(() => { if (copyStatus) copyStatus.textContent = "Link copied! 🎉"; })
+        .then(() => { if (copyStatus) copyStatus.textContent = "Link copied! "; })
         .catch(() => { document.execCommand("copy"); if (copyStatus) copyStatus.textContent = "Link copied!"; });
 });
 
-// ════════════════════════════════
-//  DRAG & DROP
-// ════════════════════════════════
+
+const flowerAnimations = ["flower-float", "flower-sway", "flower-wobble", "flower-pulse"];
+
 function addItemToWorkspace(src, type) {
     if (!src || !workspace) return;
-    const item = document.createElement("img");
+    const item  = document.createElement("img");
     const count = workspace.querySelectorAll(".placed-item").length;
 
     item.src = src;
@@ -157,10 +133,27 @@ function addItemToWorkspace(src, type) {
     item.dataset.mirrored = "false";
     item.dataset.rotation = "0";
     item.dataset.type = type;
-    item.style.left = `${80 + count * 18}px`;
-    item.style.top  = `${80 + count * 14}px`;
+    item.style.left   = `${80 + count * 18}px`;
+    item.style.top    = `${80 + count * 14}px`;
     item.style.zIndex = String(topLayer++);
     if (type === "bow") item.style.width = "130px";
+
+    // Random animation personality
+    const animName = flowerAnimations[Math.floor(Math.random() * flowerAnimations.length)];
+    const duration  = (2.5 + Math.random() * 2).toFixed(1);
+    const delay     = (Math.random() * 1.5).toFixed(1);
+
+    item.dataset.animName     = animName;
+    item.dataset.animDuration = duration;
+    item.dataset.animDelay    = delay;
+
+    // Pop in first, then switch to personality
+    item.style.animation = "flower-popin 0.4s cubic-bezier(0.175,0.885,0.32,1.275) forwards";
+    setTimeout(() => {
+        if (!item.classList.contains("dragging")) {
+            item.style.animation = `${animName} ${duration}s ${delay}s ease-in-out infinite`;
+        }
+    }, 420);
 
     item.addEventListener("pointerdown", startDrag);
     item.addEventListener("click", selectItem);
@@ -187,6 +180,7 @@ function startDrag(e) {
     const rect = draggedItem.getBoundingClientRect();
     offsetX = e.clientX - rect.left;
     offsetY = e.clientY - rect.top;
+    draggedItem.classList.add("dragging");
     draggedItem.setPointerCapture(e.pointerId);
     draggedItem.addEventListener("pointermove", onDrag);
     draggedItem.addEventListener("pointerup",   stopDrag);
@@ -210,45 +204,42 @@ function stopDrag(e) {
     draggedItem.removeEventListener("pointermove", onDrag);
     draggedItem.removeEventListener("pointerup",   stopDrag);
     draggedItem.removeEventListener("pointercancel", stopDrag);
+    draggedItem.classList.remove("dragging");
+    const n  = draggedItem.dataset.animName;
+    const d  = draggedItem.dataset.animDuration;
+    const dl = draggedItem.dataset.animDelay;
+    if (n) draggedItem.style.animation = `${n} ${d}s ${dl}s ease-in-out infinite`;
     draggedItem = null;
 }
 
-// ════════════════════════════════
-//  FINAL BOUQUET CREATION
-// ════════════════════════════════
-async function createFinalBouquet() {
-    const noteText = note ? note.value.trim() || "A bouquet made just for you." : "";
 
-    // 1. render bouquet canvas
+async function createFinalBouquet() {
     const bouquetDataUrl = await renderBouquetCanvas();
 
-    // 2. render note canvas
-    const noteDataUrl = await renderNoteCanvas(noteText);
-
-    // 3. build share link
     const items = Array.from(workspace.querySelectorAll(".placed-item")).map(item => ({
-        type: item.dataset.type,
-        src: item.getAttribute("src"),
+        type:     item.dataset.type,
+        src:      item.getAttribute("src"),
         mirrored: item.dataset.mirrored,
         rotation: item.dataset.rotation,
-        left: item.style.left,
-        top:  item.style.top,
+        left:     item.style.left,
+        top:      item.style.top,
     }));
-    const data = { note: noteText, items };
-    const pageUrl = window.location.href.split("?")[0];
-    if (shareLink) shareLink.value = `${pageUrl}?bouquet=${encodeURIComponent(JSON.stringify(data))}`;
 
-    // 4. show images as downloadable links
+    const pageUrl = window.location.href.split("?")[0];
+    if (shareLink) shareLink.value = `${pageUrl}?bouquet=${encodeURIComponent(JSON.stringify(items))}`;
+
     if (finalBouquetImage) {
         finalBouquetImage.src = bouquetDataUrl;
         bouquetDownload.href  = bouquetDataUrl;
     }
-    if (finalNoteImage) {
-        finalNoteImage.src  = noteDataUrl;
-        noteDownload.href   = noteDataUrl;
-    }
 
-    // 5. switch to final screen
+   
+    workspace.querySelectorAll(".placed-item").forEach(item => {
+        item.style.pointerEvents = "none";
+        item.classList.remove("selected");
+    });
+    document.querySelector(".workspace-tools").style.display = "none";
+
     showScreen("screen-final");
 }
 
@@ -274,10 +265,10 @@ function drawItem(ctx, item) {
     return new Promise(resolve => {
         const img = new Image();
         img.onload = () => {
-            const x = parseFloat(item.style.left) || 0;
-            const y = parseFloat(item.style.top)  || 0;
-            const w = item.offsetWidth;
-            const h = item.offsetHeight;
+            const x   = parseFloat(item.style.left) || 0;
+            const y   = parseFloat(item.style.top)  || 0;
+            const w   = item.offsetWidth;
+            const h   = item.offsetHeight;
             const rot = Number(item.dataset.rotation || 0) * Math.PI / 180;
             const mir = item.dataset.mirrored === "true" ? -1 : 1;
             ctx.save();
@@ -293,45 +284,193 @@ function drawItem(ctx, item) {
     });
 }
 
-async function renderNoteCanvas(text) {
-    const canvas = document.createElement("canvas");
-    const ctx    = canvas.getContext("2d");
-    canvas.width  = 440;
-    canvas.height = 320;
 
-    // background
-    ctx.fillStyle = "#fff7f7";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+const drawingCanvas  = document.getElementById("drawingCanvas");
+const drawCtx        = drawingCanvas ? drawingCanvas.getContext("2d") : null;
+const brushColor     = document.getElementById("brushColor");
+const brushSize      = document.getElementById("brushSize");
+const eraserBtn      = document.getElementById("eraserBtn");
+const clearBtn       = document.getElementById("clearBtn");
+const useDrawingBtn  = document.getElementById("useDrawingBtn");
+const saveDrawingBtn = document.getElementById("saveDrawingBtn");
+const savedGrid      = document.getElementById("savedGrid");
+const emptyHint      = document.getElementById("emptyHint");
 
-    // border
-    ctx.strokeStyle = "#ffd7e1";
-    ctx.lineWidth = 5;
-    ctx.strokeRect(10, 10, 420, 300);
+let isDrawing = false;
+let isEraser  = false;
+let lastX = 0, lastY = 0;
 
-    // small hearts decoration
-    ctx.font = "20px serif";
-    ctx.fillText("🌸", 20, 40);
-    ctx.fillText("🌸", 400, 40);
+if (drawCtx) {
+    drawCtx.fillStyle = "#ffffff";
+    drawCtx.fillRect(0, 0, drawingCanvas.width, drawingCanvas.height);
+}
 
-    // text
-    ctx.fillStyle = "#8b4d63";
-    ctx.font = "20px serif";
-    ctx.textAlign = "center";
+function getCanvasPos(e) {
+    const rect   = drawingCanvas.getBoundingClientRect();
+    const scaleX = drawingCanvas.width  / rect.width;
+    const scaleY = drawingCanvas.height / rect.height;
+    return {
+        x: (e.clientX - rect.left) * scaleX,
+        y: (e.clientY - rect.top)  * scaleY
+    };
+}
 
-    // word wrap
-    const words = text.split(" ");
-    let line = "", y = 100;
-    for (const word of words) {
-        const test = line + word + " ";
-        if (ctx.measureText(test).width > 380 && line !== "") {
-            ctx.fillText(line.trim(), 220, y);
-            line = word + " ";
-            y += 32;
-        } else {
-            line = test;
+if (drawingCanvas) {
+    drawingCanvas.addEventListener("pointerdown", e => {
+        isDrawing = true;
+        const pos = getCanvasPos(e);
+        lastX = pos.x;
+        lastY = pos.y;
+        drawingCanvas.setPointerCapture(e.pointerId);
+    });
+
+    drawingCanvas.addEventListener("pointermove", e => {
+        if (!isDrawing) return;
+        const pos = getCanvasPos(e);
+        drawCtx.beginPath();
+        drawCtx.moveTo(lastX, lastY);
+        drawCtx.lineTo(pos.x, pos.y);
+        drawCtx.strokeStyle = isEraser ? "#ffffff" : brushColor.value;
+        drawCtx.lineWidth   = isEraser ? 30 : Number(brushSize.value);
+        drawCtx.lineCap  = "round";
+        drawCtx.lineJoin = "round";
+        drawCtx.stroke();
+        lastX = pos.x;
+        lastY = pos.y;
+    });
+
+    drawingCanvas.addEventListener("pointerup",     () => { isDrawing = false; });
+    drawingCanvas.addEventListener("pointercancel", () => { isDrawing = false; });
+}
+
+if (eraserBtn) {
+    eraserBtn.addEventListener("click", () => {
+        isEraser = !isEraser;
+        eraserBtn.textContent = isEraser ? "Draw" : "Eraser";
+        eraserBtn.classList.toggle("active-tool", isEraser);
+    });
+}
+
+if (clearBtn) {
+    clearBtn.addEventListener("click", () => {
+        drawCtx.fillStyle = "#ffffff";
+        drawCtx.fillRect(0, 0, drawingCanvas.width, drawingCanvas.height);
+    });
+}
+
+if (useDrawingBtn) {
+    useDrawingBtn.addEventListener("click", () => {
+        const dataUrl = drawingCanvas.toDataURL("image/png");
+        addItemToWorkspace(dataUrl, "flower");
+        showScreen("screen-builder");
+        showStep("step1");
+    });
+}
+
+
+const STORAGE_PREFIX = "flora-drawn-flower:";
+
+function loadSavedFlowers() {
+    const flowers = [];
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith(STORAGE_PREFIX)) {
+            flowers.push({ key, src: localStorage.getItem(key) });
         }
     }
-    if (line.trim()) ctx.fillText(line.trim(), 220, y);
-
-    return canvas.toDataURL("image/png");
+    return flowers;
 }
+
+function renderSavedFlower(key, src) {
+   
+    const card = document.createElement("div");
+    card.className = "saved-flower";
+    card.dataset.key = key;
+
+    const img = document.createElement("img");
+    img.src = src;
+    img.alt = "Saved flower";
+    card.appendChild(img);
+
+    const removeBtn = document.createElement("button");
+    removeBtn.className = "remove-saved";
+    removeBtn.type = "button";
+    removeBtn.textContent = "✕";
+    removeBtn.addEventListener("click", e => {
+        e.stopPropagation();
+        localStorage.removeItem(key);
+        card.remove();
+        const optBtn = myDrawnFlowers && myDrawnFlowers.querySelector(`[data-key="${key}"]`);
+        if (optBtn) optBtn.remove();
+        if (emptyHint) emptyHint.style.display = savedGrid.querySelectorAll(".saved-flower").length === 0 ? "block" : "none";
+    });
+    card.appendChild(removeBtn);
+
+  
+    card.addEventListener("click", () => {
+        const img2 = new Image();
+        img2.onload = () => {
+            drawCtx.fillStyle = "#ffffff";
+            drawCtx.fillRect(0, 0, drawingCanvas.width, drawingCanvas.height);
+            drawCtx.drawImage(img2, 0, 0, drawingCanvas.width, drawingCanvas.height);
+        };
+        img2.src = src;
+    });
+
+    savedGrid.appendChild(card);
+
+   
+    if (myDrawnFlowers) {
+        const optBtn = document.createElement("button");
+        optBtn.type = "button";
+        optBtn.className = "option";
+        optBtn.dataset.flower = src;
+        optBtn.dataset.key = key;
+
+        const optImg = document.createElement("img");
+        optImg.src = src;
+        optImg.alt = "My flower";
+        optBtn.appendChild(optImg);
+        optBtn.appendChild(document.createTextNode("My Flower"));
+
+        optBtn.addEventListener("click", () => {
+            addItemToWorkspace(src, "flower");
+            playSound();
+        });
+
+        myDrawnFlowers.appendChild(optBtn);
+    }
+}
+
+function refreshSavedGallery() {
+    if (!savedGrid) return;
+    savedGrid.querySelectorAll(".saved-flower").forEach(el => el.remove());
+    if (myDrawnFlowers) myDrawnFlowers.innerHTML = "";
+
+    const flowers = loadSavedFlowers();
+    if (flowers.length === 0) {
+        if (emptyHint) emptyHint.style.display = "block";
+        return;
+    }
+    if (emptyHint) emptyHint.style.display = "none";
+    flowers.forEach(f => renderSavedFlower(f.key, f.src));
+}
+
+if (saveDrawingBtn) {
+    saveDrawingBtn.addEventListener("click", () => {
+        const dataUrl = drawingCanvas.toDataURL("image/png");
+        const key = `${STORAGE_PREFIX}${Date.now()}`;
+        try {
+            localStorage.setItem(key, dataUrl);
+        } catch {
+            alert("Sorry, storage is full — try deleting some saved flowers.");
+            return;
+        }
+        if (emptyHint) emptyHint.style.display = "none";
+        renderSavedFlower(key, dataUrl);
+        saveDrawingBtn.textContent = "Saved! ";
+        setTimeout(() => { saveDrawingBtn.textContent = " Save to my flowers"; }, 1200);
+    });
+}
+
+refreshSavedGallery();
