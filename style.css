@@ -13,7 +13,6 @@ body {
 
 /* ── Header ── */
 header {
-   
     position: relative;
     text-align: center;
     margin: 20px auto 0;
@@ -31,9 +30,9 @@ header {
     justify-content: center;
 }
 
-header h2 {
+header h1 {
     color: #f7f7f7;
-    font-size: 40px;
+    font-size: 50px;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
     margin: 0;
 }
@@ -69,7 +68,6 @@ header h2 {
     display: block;
 }
 
-/* ── Choice screen (screen-choice, screen-draw) ── */
 #screen-choice,
 #screen-draw {
     min-height: 70vh;
@@ -84,6 +82,7 @@ header h2 {
     display: flex;
 }
 
+/* ── Choice screen ── */
 .choice-title {
     color: #8b4d63;
     font-size: 26px;
@@ -127,7 +126,7 @@ header h2 {
     gap: 20px;
 }
 
-/* ── Builder screen ── */
+/* ── Builder ── */
 .builder-container {
     display: flex;
     justify-content: center;
@@ -149,7 +148,6 @@ header h2 {
     top: 20px;
 }
 
-/* Step panels inside builder */
 .step-panel {
     display: none;
 }
@@ -212,7 +210,7 @@ header h2 {
     background: #fff0f5;
 }
 
-/* Buttons */
+/* ── Buttons ── */
 .next-button {
     font-family: "Emilys Candy", serif;
     padding: 10px 22px;
@@ -239,7 +237,7 @@ header h2 {
     background-color: #d0d0d0;
 }
 
-/* Workspace */
+/* ── Workspace ── */
 .workspace {
     position: relative;
     width: 400px;
@@ -249,6 +247,12 @@ header h2 {
     border-radius: 16px;
     overflow: hidden;
     margin: 0 auto;
+    animation: workspace-shimmer 4s ease-in-out infinite;
+}
+
+@keyframes workspace-shimmer {
+    0%, 100% { background-color: rgba(255,255,255,0.85); }
+    50%       { background-color: rgba(255,247,250,0.92); }
 }
 
 .workspace-tools {
@@ -277,6 +281,7 @@ header h2 {
     background: #ff69b4;
 }
 
+/* ── Placed flowers ── */
 .placed-item {
     position: absolute;
     width: 110px;
@@ -285,33 +290,181 @@ header h2 {
     touch-action: none;
 }
 
+@keyframes flower-float {
+    0%, 100% { transform: translateY(0px); }
+    50%       { transform: translateY(-10px); }
+}
+
+@keyframes flower-sway {
+    0%, 100% { transform: translateX(0px); }
+    50%       { transform: translateX(-8px); }
+}
+
+@keyframes flower-wobble {
+    0%        { transform: rotate(-6deg); }
+    50%       { transform: rotate(6deg); }
+    100%      { transform: rotate(-6deg); }
+}
+
+@keyframes flower-pulse {
+    0%, 100% { transform: scale(1); }
+    50%       { transform: scale(1.08); }
+}
+
+@keyframes flower-popin {
+    0%   { transform: scale(0) rotate(-20deg); opacity: 0; }
+    70%  { transform: scale(1.15) rotate(5deg); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.placed-item.dragging {
+    animation: none !important;
+    transform: scale(1.12) !important;
+    opacity: 0.85;
+    cursor: grabbing !important;
+    filter: drop-shadow(0 6px 12px rgba(0,0,0,0.25));
+}
+
+@keyframes selected-glow {
+    0%, 100% { outline-color: #ff69b4; outline-width: 2px; }
+    50%       { outline-color: #ffb6c1; outline-width: 3px; }
+}
+
 .placed-item.selected {
+    animation: selected-glow 1s ease-in-out infinite !important;
     outline: 2px dashed #ff69b4;
 }
 
-#notePreviewBox {
-    margin: 16px auto 0;
-    width: 400px;
-    min-height: 60px;
-    padding: 14px;
-    background: #fff7f7;
-    border: 2px solid #ffd7e1;
-    border-radius: 12px;
-    color: #8b4d63;
-    text-align: center;
-    font-family: "Emilys Candy", serif;
+/* ── Whiteboard ── */
+.draw-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 20px 60px;
+    gap: 16px;
 }
 
-#note {
-    width: 100%;
-    min-height: 160px;
-    padding: 14px;
-    font-family: "Emilys Candy", serif;
+.draw-tools {
+    display: flex;
+    gap: 18px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.tool-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    color: #8b4d63;
+}
+
+.tool-label input[type="color"] {
+    width: 50px;
+    height: 36px;
     border: 2px solid #ffb6c1;
-    border-radius: 10px;
-    resize: vertical;
-    display: block;
+    border-radius: 8px;
+    cursor: pointer;
+    padding: 2px;
+}
+
+.tool-label input[type="range"] {
+    width: 120px;
+}
+
+.tool-btn {
+    margin-top: 0;
+}
+
+.tool-btn.active-tool {
+    background-color: #ff69b4;
+}
+
+#drawingCanvas {
+    border: 3px solid #ffd7e1;
+    border-radius: 16px;
+    background: #ffffff;
+    cursor: crosshair;
+    touch-action: none;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+}
+
+.draw-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.saved-gallery {
+    width: 100%;
+    max-width: 520px;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.saved-gallery h3 {
+    color: #8b4d63;
     margin-bottom: 10px;
+}
+
+.saved-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+}
+
+.empty-hint {
+    color: #c48fa0;
+    font-size: 13px;
+    max-width: 300px;
+}
+
+.saved-flower {
+    position: relative;
+    width: 90px;
+    height: 90px;
+    border: 2px solid #ffd7e1;
+    border-radius: 12px;
+    background: #fff;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.saved-flower:hover {
+    border-color: #ff69b4;
+    transform: translateY(-2px);
+}
+
+.saved-flower img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.saved-flower .remove-saved {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 20px;
+    height: 20px;
+    background: rgba(255,255,255,0.9);
+    border: none;
+    border-radius: 50%;
+    color: #ff4d6d;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#myDrawnFlowers:empty {
+    display: none;
 }
 
 /* ── Final screen ── */
@@ -330,8 +483,7 @@ header h2 {
     margin-top: 0;
 }
 
-#finalBouquetImage,
-#finalNoteImage {
+#finalBouquetImage {
     width: 100%;
     max-width: 420px;
     border-radius: 12px;
@@ -342,8 +494,7 @@ header h2 {
     transition: opacity 0.2s;
 }
 
-#finalBouquetImage:hover,
-#finalNoteImage:hover {
+#finalBouquetImage:hover {
     opacity: 0.85;
 }
 
@@ -389,8 +540,7 @@ header h2 {
         max-width: 460px;
         position: static;
     }
-    .workspace,
-    #notePreviewBox {
+    .workspace {
         width: 100%;
     }
 }
