@@ -12,7 +12,7 @@
 <body>
 
     <header>
-        <h2>Make your own bouquet!</h2>
+        <h1>Make your own bouquet!</h1>
         <img class="sticker" id="stickerbunny" src="images/bunny holding a bouquet.png">
         <img class="sticker" id="stickerbow" src="images/pinkbow.jpg">
     </header>
@@ -21,7 +21,7 @@
     <div id="screen-choice" class="screen active">
         <h2 class="choice-title">What would you like to do?</h2>
         <div class="choice-buttons">
-            <button class="choice-btn" id="goToBuilder">Choose from pre-made flowers</button>
+            <button class="choice-btn" id="goToBuilder"> Choose from pre-made flowers</button>
             <button class="choice-btn" id="goToDraw">Draw your own flowers</button>
         </div>
     </div>
@@ -43,6 +43,7 @@
                         <button class="option" data-flower="images/pink-lily.png"><img src="images/pink-lily.png" alt="Pink Lily">Pink Lily</button>
                         <button class="option" data-flower="images/sunflower.png"><img src="images/sunflower.png" alt="Sunflower">Sunflower</button>
                     </div>
+                    <div id="myDrawnFlowers" class="options-grid"></div>
                     <button class="next-button" data-next="step2">Next →</button>
                 </div>
 
@@ -57,14 +58,7 @@
                         <button class="option" data-bow="images/pink-bow.png"><img src="images/pink-bow.png" alt="Pink Bow">Pink Bow</button>
                     </div>
                     <button class="next-button back-btn" data-back="step1">← Go Back</button>
-                    <button class="next-button" data-next="step3">Next →</button>
-                </div>
-
-                <div id="step3" class="step-panel selection">
-                    <h2>Write a note!</h2>
-                    <textarea id="note" placeholder="Your message..."></textarea>
-                    <button class="next-button back-btn" data-back="step2">← Go Back</button>
-                    <button id="finishButton" class="next-button">Create Bouquet</button>
+                    <button class="next-button" id="finishButton">Create Bouquet</button>
                 </div>
 
             </div>
@@ -78,19 +72,43 @@
                         <button id="deleteBtn">✕ Delete</button>
                     </div>
                 </div>
-                <div id="notePreviewBox">
-                    <p id="notePreview">Your note will appear here.</p>
-                </div>
             </div>
 
         </div>
     </div>
 
-    <!-- SCREEN 2: draw placeholder -->
+    <!-- SCREEN 2: whiteboard -->
     <div id="screen-draw" class="screen">
-        <div class="choice-screen-inner">
-            <h2 class="choice-title"> Drawing mode coming soon!</h2>
-            <button class="next-button back-btn" id="backFromDraw">← Go Back</button>
+        <div class="draw-container">
+            <h2 class="choice-title">Draw your own flower! </h2>
+
+            <div class="draw-tools">
+                <label class="tool-label">
+                    Colour
+                    <input type="color" id="brushColor" value="#ff69b4">
+                </label>
+                <label class="tool-label">
+                    Size
+                    <input type="range" id="brushSize" min="2" max="40" value="8">
+                </label>
+                <button class="next-button tool-btn" id="eraserBtn" type="button">Eraser</button>
+                <button class="next-button tool-btn" id="clearBtn" type="button">Clear</button>
+            </div>
+
+            <canvas id="drawingCanvas" width="400" height="400"></canvas>
+
+            <div class="draw-actions">
+                <button class="next-button back-btn" id="backFromDraw" type="button">← Go Back</button>
+                <button class="next-button" id="saveDrawingBtn" type="button"> Save to my flowers</button>
+                <button class="next-button" id="useDrawingBtn" type="button">Use this flower </button>
+            </div>
+
+            <div class="saved-gallery">
+                <h3>My saved flowers</h3>
+                <div class="saved-grid" id="savedGrid">
+                    <p class="empty-hint" id="emptyHint">Nothing saved yet — draw something and click "Save to my flowers"!</p>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -101,13 +119,7 @@
             <a id="bouquetDownload" download="my-bouquet.png">
                 <img id="finalBouquetImage" alt="Click to download your bouquet">
             </a>
-            <p class="download-hint">Click the bouquet image to download it!</p>
-
-            <a id="noteDownload" download="my-note.png">
-                <img id="finalNoteImage" alt="Click to download your note">
-            </a>
-            <p class="download-hint">Click the note image to download it!</p>
-
+            <p class="download-hint"> Click the bouquet to download it!</p>
             <div class="share-row">
                 <input id="shareLink" type="text" readonly placeholder="Share link will appear here">
                 <button id="copyLinkBtn" class="next-button">Copy Link</button>
